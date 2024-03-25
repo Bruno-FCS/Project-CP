@@ -18,13 +18,13 @@ const App = () => {
   };
 
   const headerOptions = ({ navigation, route }) => ({
-    headerStyle: { backgroundColor: "#39b575" },
+    headerStyle: { backgroundColor: "#9F4146" },
     headerTintColor: "white",
     headerTitleAlign: "center",
     headerTitle: () => <LogoTitle />,
     headerRight: () => {
       return (
-        <Button title="Loging" onPress={() => navigation.navigate("Login")} />
+        <Button title="Login" onPress={() => navigation.navigate("Login")} />
       );
     },
   });
@@ -33,7 +33,7 @@ const App = () => {
     <Provider store={store}>
       <NavigationContainer>
         <StatusBar style="dark" />
-        <Stack.Navigator>
+        <Stack.Navigator initialRouteName="Register">
           <Stack.Group screenOptions={headerOptions}>
             <Stack.Screen name="Home" component={Home} />
             <Stack.Screen name="Cart" component={Cart} />

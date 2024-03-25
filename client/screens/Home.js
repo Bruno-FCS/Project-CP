@@ -46,8 +46,11 @@ const Home = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Home page</Text>
-      {isLoading ? <ActivityIndicator size={"large"} /> : <Products />}
+      {isLoading ? (
+        <ActivityIndicator size={"large"} />
+      ) : (
+        <Products navigation={navigation} />
+      )}
     </View>
   );
 };
@@ -57,9 +60,8 @@ export default Home;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: "#F3E2E3",
     alignItems: "center",
     justifyContent: "center",
   },
-  text: { fontWeight: "bold", fontSize: 20 },
 });

@@ -1,24 +1,47 @@
 import React from "react";
-import { View, Text, StyleSheet, FlatList, Image } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  FlatList,
+  Image,
+  TouchableOpacity,
+} from "react-native";
 import { useSelector } from "react-redux";
 
-const Products = () => {
+const Products = ({ navigation }) => {
   const data = useSelector((state) => state.data.products);
 
   const renderPrizeItem = ({ item }) => (
     <View style={styles.listItem}>
-      <Image source={{ uri: item.image }} style={{ width: 150, height: 200 }} />
-      <Text style={styles.year}>{item.title}</Text>
-      <Text style={styles.year}>{item.price}</Text>
+      <TouchableOpacity
+        onPress={() => navigation.navigate("Product", { item })}
+        style={{
+          justifyContent: "space-between",
+          flex: 1,
+        }}
+      >
+        <Image
+          source={{ uri: item.image }}
+          style={{ width: 125, height: 180 }}
+          resizeMode="contain"
+        />
+        <Text style={styles.text}>{item.title}</Text>
+        <Text style={styles.text}>Rating: {item.rating.rate}/5</Text>
+        <Text style={{ ...styles.text, fontWeight: "bold" }}>
+          ${item.price.toFixed(2)}
+        </Text>
+      </TouchableOpacity>
     </View>
   );
 
   return (
     <FlatList
+      numColumns={2}
       style={styles.list}
       data={data}
       keyExtractor={(item) => {
-        item.id;
+        return item.id;
       }}
       renderItem={renderPrizeItem}
     />
@@ -29,22 +52,24 @@ export default Products;
 
 const styles = StyleSheet.create({
   list: {
-    alignContent: "stretch",
-    width: "100%",
-    marginTop: 10,
+    alignContent: "center",
+    marginVertical: 10,
+    backgroundColor: "#fff",
+    borderColor: "#C1666B",
+    borderWidth: 2,
+    borderRadius: 10,
+    width: 384,
   },
   listItem: {
-    alignSelf: "center",
-    width: "80%",
-    marginVertical: 10,
+    width: 150,
+    margin: 20,
     flexDirection: "column",
-    alignItems: "flex-start",
+    alignItems: "center",
+    justifyContent: "space-between",
     padding: 10,
-    borderBottomColor: "#ddd",
-    borderBottomWidth: 2,
+    borderColor: "#000",
+    borderRadius: 5,
+    borderWidth: 2,
   },
-  itemHeader: { flexDirection: "row", alignItems: "center" },
-  year: { fontSize: 20, color: "blue", fontWeight: "bold" },
-  category: { fontSize: 16, fontWeight: "bold", marginLeft: 10 },
-  name: { marginVertical: 10, fontStyle: "italic" },
+  text: { fontSize: 16, textAlign: "justify" },
 });

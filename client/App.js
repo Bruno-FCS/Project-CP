@@ -8,7 +8,7 @@ import Cart from "./screens/Cart";
 import Login from "./screens/Login";
 import Register from "./screens/Register";
 import Product from "./screens/Product";
-import { Button, Image } from "react-native";
+import { Button, Image, Text, TouchableOpacity, View } from "react-native";
 
 const Stack = createNativeStackNavigator();
 
@@ -18,14 +18,29 @@ const App = () => {
   };
 
   const headerOptions = ({ navigation, route }) => ({
-    headerStyle: { backgroundColor: "#39b575" },
+    headerStyle: { backgroundColor: "#C1666B" },
     headerTintColor: "white",
     headerTitleAlign: "center",
     headerTitle: () => <LogoTitle />,
     headerRight: () => {
-      return (
-        <Button title="Loging" onPress={() => navigation.navigate("Login")} />
-      );
+      if (route.name == "Login" || route.name == "Register") {
+        return;
+      } else {
+        return (
+          <TouchableOpacity onPress={() => navigation.navigate("Login")}>
+            <View
+              style={{
+                backgroundColor: "#9F4146",
+                paddingVertical: 5,
+                paddingHorizontal: 10,
+                borderRadius: 5,
+              }}
+            >
+              <Text style={{ color: "#fff" }}>Login</Text>
+            </View>
+          </TouchableOpacity>
+        );
+      }
     },
   });
 

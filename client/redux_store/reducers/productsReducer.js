@@ -16,16 +16,15 @@ const productsReducer = (state = initialState, action) => {
     }
     case INSERT_INTO_CART: {
       let item = state.cart.find((item) => item.id == action.payload.id);
-      console.log(state.cart);
+      let itemQuantity = item ? item.quantity : 0;
       if (item) {
         return {
           ...state,
           cart: [
-            ...state.cart,
-            { ...item, quantity: item.quantity + action.payload.quantity },
+            ...state.cart.filter((cartItem) => cartItem != item),
+            { ...item, quantity: itemQuantity + action.payload.quantity },
           ],
         };
-        item.quantity += action.payload.quantity;
       } else {
         return { ...state, cart: [...state.cart, action.payload] };
       }

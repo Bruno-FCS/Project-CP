@@ -10,7 +10,7 @@ import {
 import { useSelector } from "react-redux";
 
 const Products = ({ navigation }) => {
-  const data = useSelector((state) => state.data.products);
+  const productsData = useSelector((state) => state.products.products);
 
   const renderPrizeItem = ({ item }) => (
     <View style={styles.listItem}>
@@ -39,7 +39,7 @@ const Products = ({ navigation }) => {
     <FlatList
       numColumns={2}
       style={styles.list}
-      data={data}
+      data={productsData}
       keyExtractor={(item) => {
         return item.id;
       }}

@@ -1,14 +1,6 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import {
-  Button,
-  Image,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { insertIntoCart } from "../redux_store/actions";
 
 const Product = ({ navigation, route }) => {

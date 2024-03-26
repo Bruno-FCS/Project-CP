@@ -1,12 +1,6 @@
 import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  ActivityIndicator,
-  FlatList,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { useDispatch } from "react-redux";
+import { ActivityIndicator, StyleSheet, View } from "react-native";
 import Products from "../components/Products";
 import { saveProducts } from "../redux_store/actions";
 
@@ -32,7 +26,7 @@ const Home = ({ navigation }) => {
         if (data !== undefined) {
           dispatch(saveProducts(data));
           setIsLoading(false);
-          console.warn(`Data received from response`);
+          console.log(`Data received from response`);
         } else {
           console.log(`No data received from response`);
         }

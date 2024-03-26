@@ -3,6 +3,8 @@ import {
   GET_PRODUCT,
   INSERT_INTO_CART,
   REMOVE_FROM_CART,
+  LOGIN,
+  LOGOUT,
 } from "../actionTypes";
 
 export const saveProducts = (products) => ({
@@ -23,4 +25,13 @@ export const insertIntoCart = (product) => ({
 export const removeFromCart = (productId) => ({
   type: REMOVE_FROM_CART,
   payload: productId,
+});
+
+export const login = (userInfo) => ({
+  type: LOGIN,
+  payload: userInfo,
+});
+
+export const logout = () => ({
+  type: LOGOUT,
 });

@@ -1,11 +1,13 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import { faCartShopping } from "@fortawesome/free-solid-svg-icons";
 import Home from "./screens/Home";
 import Cart from "./screens/Cart";
 import Login from "./screens/Login";
 import Register from "./screens/Register";
 import Product from "./screens/Product";
-import { Button, Image, Text, TouchableOpacity, View } from "react-native";
+import { Image, Text, TouchableOpacity, View } from "react-native";
 import { useSelector } from "react-redux";
 
 const Stack = createNativeStackNavigator();
@@ -14,7 +16,13 @@ const Settings = () => {
   const loggedUser = useSelector((state) => state.users.loggedUser);
 
   const LogoTitle = () => {
-    return <Image style={{}} source={require("./assets/e-Shop-s.png")} />;
+    return (
+      <Image
+        style={{ height: 50 }}
+        source={require("./assets/quickShopLogo.png")}
+        resizeMode="contain"
+      />
+    );
   };
 
   const headerOptions = ({ navigation, route }) => ({
@@ -38,7 +46,11 @@ const Settings = () => {
                     borderRadius: 5,
                   }}
                 >
-                  {/* <Icon /> */}
+                  <FontAwesomeIcon
+                    icon={faCartShopping}
+                    color="#fff"
+                    size={19}
+                  />
                 </View>
               </TouchableOpacity>
             )}
@@ -49,6 +61,7 @@ const Settings = () => {
                   paddingVertical: 5,
                   paddingHorizontal: 10,
                   borderRadius: 5,
+                  marginLeft: 10,
                 }}
               >
                 <Text style={{ color: "#fff" }}>Login</Text>

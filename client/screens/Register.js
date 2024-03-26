@@ -21,7 +21,10 @@ const Register = ({ navigation }) => {
     }
   }
 
+  const registerHandler = () => {
 
+    navigation.navigate("Home")
+  }
   return (
     <View style={styles.container}>
       <View style={styles.subContainer}>
@@ -85,7 +88,7 @@ const Register = ({ navigation }) => {
           />
         </View>
 
-        <TouchableOpacity onPress={() => navigation.navigate("Home")}>
+        <TouchableOpacity onPress={registerHandler}>
           
           <View style={[styles.button, { backgroundColor: "#9F4146"}]}>
             <Text style={[{color: "#fff",}]}>Register</Text>

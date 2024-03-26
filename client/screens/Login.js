@@ -1,12 +1,12 @@
 import { useState } from "react";
-import { Button, StyleSheet, Text, TextInput, View, Image, TouchableOpacity } from "react-native";
+import { StyleSheet, Text, TextInput, View, Image, TouchableOpacity } from "react-native";
 
 const Login = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <View style={styles.subContainer}>
 
-        <Image style={styles.logo} source={require("../assets/placeholder.jpg")}/>
+        <Image resizeMode="contain" source={require("../assets/quickShopLogo.png")}/>
 
         <Text style={styles.heading}>Sign in</Text>
 
@@ -73,10 +73,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     width: 384,
   },
-  logo: {
-    width: 210,
-    height: 70
-  },
+  
   inputFields: {
     width: 250,
     height: 34,

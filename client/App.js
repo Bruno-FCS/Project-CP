@@ -12,9 +12,9 @@ import { Button, Image, Text, TouchableOpacity, View } from "react-native";
 
 const Stack = createNativeStackNavigator();
 
-const App = () => {
+const App = ({navigation}) => {
   const LogoTitle = () => {
-    return <Image style={{}} source={require("./assets/e-Shop-s.png")} />;
+    return <Image  resizeMode="contain" source={require("./assets/quickShopLogo.png")} onPress={() => navigation.navigate("Register")}/>;
   };
 
   const headerOptions = ({ navigation, route }) => ({

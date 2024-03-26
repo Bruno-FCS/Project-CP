@@ -1,8 +1,12 @@
-import { SAVE_PRODUCTS, GET_PRODUCT } from "../actionTypes";
+import {
+  SAVE_PRODUCTS,
+  INSERT_INTO_CART,
+  REMOVE_FROM_CART,
+} from "../actionTypes";
 
 const initialState = {
   products: [],
-  selectedProduct: {},
+  cart: [],
 };
 
 const productsReducer = (state = initialState, action) => {
@@ -10,13 +14,24 @@ const productsReducer = (state = initialState, action) => {
     case SAVE_PRODUCTS: {
       return { ...state, products: action.payload };
     }
-    case GET_PRODUCT: {
-      return {
-        ...state,
-        selectedProduct: state.products.filter(
-          (product) => product.id == action.payload
-        ),
-      };
+    case INSERT_INTO_CART: {
+      let item = state.cart.find((item) => item.id == action.payload.id);
+      console.log(state.cart);
+      if (item) {
+        return {
+          ...state,
+          cart: [
+            ...state.cart,
+            { ...item, quantity: item.quantity + action.payload.quantity },
+          ],
+        };
+        item.quantity += action.payload.quantity;
+      } else {
+        return { ...state, cart: [...state.cart, action.payload] };
+      }
+    }
+    case REMOVE_FROM_CART: {
+      return state;
     }
     default:
       return state;

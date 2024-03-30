@@ -1,11 +1,13 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import { faCartShopping } from "@fortawesome/free-solid-svg-icons";
 import Home from "./screens/Home";
 import Cart from "./screens/Cart";
 import Login from "./screens/Login";
 import Register from "./screens/Register";
 import Product from "./screens/Product";
-import { Button, Image, Text, TouchableOpacity, View } from "react-native";
+import { Image, Text, TouchableOpacity, View } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "./redux_store/actions";
 
@@ -21,7 +23,13 @@ const Settings = ( {navigation} ) => {
   }
   
   const LogoTitle = () => {
-    return <Image style={[{marginRight: 10}, {marginBottom: 5}]} source={require("./assets/quickShopLogo.png")} />;
+    return (
+      <Image
+        style={[{ height: 50 }, {marginRight: 10}, {marginBottom: 5}]}
+        source={require("./assets/quickShopLogo.png")}
+        resizeMode="contain"
+      />
+    );
   };
 
   const headerOptions = ({ navigation, route }) => ({
@@ -46,7 +54,11 @@ const Settings = ( {navigation} ) => {
                       borderRadius: 5,
                     }}
                   >
-                    <Text style={{ color: "#fff" }}>Cart</Text>
+                    <FontAwesomeIcon
+                      icon={faCartShopping}
+                      color="#fff"
+                      size={19}
+                    />
                   </View>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => navigation.navigate("Login")}>
@@ -72,7 +84,8 @@ const Settings = ( {navigation} ) => {
                     paddingVertical: 5,
                     paddingHorizontal: 10,
                     borderRadius: 5,
-                  }}
+                    marginLeft: 10,
+                }}
                 >
                   <Text style={{ color: "#fff" }}>Login</Text>
                 </View>

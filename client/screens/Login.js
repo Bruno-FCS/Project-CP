@@ -1,12 +1,48 @@
 import { useState } from "react";
-import { StyleSheet, Text, TextInput, View, Image, TouchableOpacity } from "react-native";
+import { StyleSheet, Text, TextInput, View, Image, TouchableOpacity, Pressable } from "react-native";
+import { MaterialCommunityIcons } from '@expo/vector-icons'
+import { useDispatch, useSelector } from "react-redux";
+import { login } from "../redux_store/actions"; 
 
 const Login = ({ navigation }) => {
+  const [icon, setIcon] = useState("eye-off");
+  const [passVisibility, setPassVisibility] = useState(true);
+
+  const dispatch = useDispatch()
+  const errorMsg = useSelector((state) => state.users.errorMessage)
+
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+  const [displayError, setDisplayError] = useState(false)
+  
+  const handlePassVisibility = () => {
+    if (icon == "eye-off"){
+        setIcon("eye");
+        setPassVisibility(!passVisibility);
+    }else if (icon == "eye"){
+        setIcon("eye-off");
+        setPassVisibility(!passVisibility);
+    }
+  }
+
+  const actionHandler = () => {
+   let user = {email, password}
+   dispatch(login(user))
+
+    if (errorMsg != ""){
+        setDisplayError(true)
+    }
+    else {
+      setDisplayError(false)
+      navigation.navigate("Home")
+    }
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.subContainer}>
 
-        <Image resizeMode="contain" source={require("../assets/quickShopLogo.png")}/>
+        <Image style={[{marginTop: 15}]} source={require("../assets/blackWhiteLogo.png")}/>
 
         <Text style={styles.heading}>Sign in</Text>
 
@@ -16,22 +52,41 @@ const Login = ({ navigation }) => {
           </Text>
             <TextInput
               style={styles.inputFields}
+              value={email}
+              onChangeText={setEmail}
+              textContentType="emailAddress"
             />
         </View>
         <View>
-          <Text>
-            Enter your password:
-          </Text>
+
+          <View style={[{flexDirection: "row"}, styles.text]}>
+            <Text>
+              Enter your password:
+            </Text>
+
+            <Pressable onPress={handlePassVisibility} style={[{alignSelf: "center"}]}>
+                <MaterialCommunityIcons name={icon} size={22} color="#9F4146"/>
+            </Pressable>
+        </View>
+
           <TextInput
             style={styles.inputFields}
-          
+            value={password}
+            onChangeText={setPassword}
+            secureTextEntry={passVisibility}
+            autoComplete="off"
+            textContentType="password"
+            autoCapitalize="none"
           />
+          
         </View>
-      
-        <TouchableOpacity onPress={() => navigation.navigate("Home")}>
+
+        {displayError && <Text style={styles.error}>{errorMsg}</Text>}
+
+        <TouchableOpacity onPress={actionHandler}>
           
           <View style={[styles.button, {backgroundColor:"#C1666B"}]}>
-            <Text style={[{color: "#fff",}]}>Sign in</Text>
+            <Text style={[{color: "#fff"}]}>Sign in</Text>
           </View>
 
         </TouchableOpacity>
@@ -43,11 +98,11 @@ const Login = ({ navigation }) => {
         <TouchableOpacity onPress={() => navigation.navigate("Register")}>
           
           <View style={[styles.button, { backgroundColor: "#9F4146"}]}>
-            <Text style={[{color: "#fff",}]}>Create an account</Text>
+            <Text style={[{color: "#fff"}]}>Create an account</Text>
           </View>
 
         </TouchableOpacity>
-          
+          <Text>{email}, {password}</Text>
       </View>
     </View>
   );
@@ -68,6 +123,8 @@ const styles = StyleSheet.create({
     marginTop: 20,
     marginBottom: 20,
     backgroundColor: "#fff",
+    borderColor: "#C1666B",
+    borderWidth: 2,
     paddingLeft: 20,
     paddingRight: 20,
     borderRadius: 10,
@@ -81,21 +138,29 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: "#C1666B",
     borderRadius: 5,
+    paddingLeft: 5,
   },
   button: {
     borderRadius: 5,
-    marginTop: 10,
+    marginTop: 15,
     marginBottom: 10,
     padding: 10,
     alignItems: "center",
     width: 200,
   },
-
   text: { 
-    marginTop: 5, 
+    marginTop: 10, 
     marginBottom: 5 
   },
   heading: {
     fontSize: 30,
+    marginTop: 5,
+    marginBottom: 5,
+  },
+  error: {
+    color: "red",
+    marginTop: 5,
+    marginBottom: 5,
+    fontWeight: "bold"
   }
 });

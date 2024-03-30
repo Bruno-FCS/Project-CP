@@ -6,15 +6,22 @@ import Login from "./screens/Login";
 import Register from "./screens/Register";
 import Product from "./screens/Product";
 import { Button, Image, Text, TouchableOpacity, View } from "react-native";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { logout } from "./redux_store/actions";
 
 const Stack = createNativeStackNavigator();
 
-const Settings = () => {
+const Settings = ( {navigation} ) => {
   const loggedUser = useSelector((state) => state.users.loggedUser);
+  const dispatch = useDispatch()
 
+  const handleLogOut = () => {
+    dispatch(logout())
+    // navigation.navigate("Login")
+  }
+  
   const LogoTitle = () => {
-    return <Image style={{}} source={require("./assets/e-Shop-s.png")} />;
+    return <Image style={[{marginRight: 10}, {marginBottom: 5}]} source={require("./assets/quickShopLogo.png")} />;
   };
 
   const headerOptions = ({ navigation, route }) => ({
@@ -29,7 +36,36 @@ const Settings = () => {
         return (
           <>
             {loggedUser.email && (
-              <TouchableOpacity onPress={() => navigation.navigate("Cart")}>
+              <View style={[{flexDirection: "row"}]}>
+                <TouchableOpacity onPress={() => navigation.navigate("Cart")}>
+                  <View
+                    style={{
+                      backgroundColor: "#9F4146",
+                      paddingVertical: 5,
+                      paddingHorizontal: 10,
+                      borderRadius: 5,
+                    }}
+                  >
+                    <Text style={{ color: "#fff" }}>Cart</Text>
+                  </View>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => navigation.navigate("Login")}>
+                  <View
+                    style={{
+                      backgroundColor: "#9F4146",
+                      paddingVertical: 5,
+                      paddingHorizontal: 10,
+                      borderRadius: 5,
+                      marginLeft: 5,
+                    }}
+                  >
+                    <Text style={{ color: "#fff" }}>Log out</Text>
+                  </View>
+                </TouchableOpacity>
+              </View>
+            )}
+            {!loggedUser.email && (
+              <TouchableOpacity onPress={() => navigation.navigate("Login")}>
                 <View
                   style={{
                     backgroundColor: "#9F4146",
@@ -38,22 +74,10 @@ const Settings = () => {
                     borderRadius: 5,
                   }}
                 >
-                  {/* <Icon /> */}
+                  <Text style={{ color: "#fff" }}>Login</Text>
                 </View>
-              </TouchableOpacity>
+             </TouchableOpacity>
             )}
-            <TouchableOpacity onPress={() => navigation.navigate("Login")}>
-              <View
-                style={{
-                  backgroundColor: "#9F4146",
-                  paddingVertical: 5,
-                  paddingHorizontal: 10,
-                  borderRadius: 5,
-                }}
-              >
-                <Text style={{ color: "#fff" }}>Login</Text>
-              </View>
-            </TouchableOpacity>
           </>
         );
       }

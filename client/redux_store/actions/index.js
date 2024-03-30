@@ -5,6 +5,7 @@ import {
   REMOVE_FROM_CART,
   LOGIN,
   LOGOUT,
+  REGISTER_USER
 } from "../actionTypes";
 
 export const saveProducts = (products) => ({
@@ -34,4 +35,9 @@ export const login = (userInfo) => ({
 
 export const logout = () => ({
   type: LOGOUT,
+});
+
+export const registerUser = (userInfo) => ({
+  type: REGISTER_USER,
+  payload: userInfo
 });

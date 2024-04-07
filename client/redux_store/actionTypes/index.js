@@ -5,3 +5,4 @@ export const REMOVE_FROM_CART = "REMOVE_FROM_CART";
 export const LOGIN = "LOGIN";
 export const LOGOUT = "LOGOUT";
 export const REGISTER_USER = "REGISTER_USER"
+export const EMPTY_CART = "EMPTY_CART"

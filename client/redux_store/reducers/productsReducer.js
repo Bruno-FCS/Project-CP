@@ -2,6 +2,7 @@ import {
   SAVE_PRODUCTS,
   INSERT_INTO_CART,
   REMOVE_FROM_CART,
+  EMPTY_CART
 } from "../actionTypes";
 
 const initialState = {
@@ -30,7 +31,10 @@ const productsReducer = (state = initialState, action) => {
       }
     }
     case REMOVE_FROM_CART: {
-      return state;
+      return {...state, cart: state.cart.filter((item) => item.id !== action.payload)};
+    }
+    case EMPTY_CART:{
+      return{...state, cart:[]}
     }
     default:
       return state;

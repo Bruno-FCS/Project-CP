@@ -99,7 +99,7 @@ const Settings = ( {navigation} ) => {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator>
+      <Stack.Navigator >
         <Stack.Group screenOptions={headerOptions}>
           <Stack.Screen name="Home" component={Home} />
           <Stack.Screen name="Cart" component={Cart} />

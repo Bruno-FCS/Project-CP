@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Button, StyleSheet, Text, TextInput, TouchableOpacity, View, Image, FlatList, Alert} from "react-native";
+import { Button, StyleSheet, Text, TextInput, TouchableOpacity, View, Image, FlatList, Alert, Modal} from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { emptyCart, removeFromCart,  } from "../redux_store/actions";
 
@@ -7,9 +7,7 @@ const Cart = ({ route, navigation }) => {
 
 //Calculation & Alert Functions ------------------------------------------------------------
 
-const [discount, setDiscount]= useState ('')
-const [subtotal, setSubtotal] = useState('')
-const [totalPrice, setTotalPrice] = useState('')
+
 const [inputPC, setInputPC] = useState('')
 const promoCode = "SHOP2024"
 const [discountPercent, setDiscountPercent] = useState ('')
@@ -17,7 +15,12 @@ const [error,setError] = useState('')
 const [confirmationMessage, setConfirmationMessage] = useState('')
 const [isDiscount, setIsDiscount ] = useState(false)
 const [itemQuantity, setItemQuantity] = useState(0)
+const [showModal, setShowModal] = useState (false)
 const dispatch = useDispatch()
+const [creditCard, setCreditCard] = useState('')
+const [cvc, setCvc] = useState('')
+
+
 
 
 //Promocode function --------------------------------
@@ -51,22 +54,28 @@ let alertButtons=[
   },
 ]
 
-// Remove from cart Function---------------------------
+// Remove from cart function----------------------------------------------
 const handleDelete= itemID =>{
   dispatch(removeFromCart)
 }
 
-// const calculation = ()=>{
-//   addedCartItems.map((item)=>(
-//     <Text key={item,id}>{item.price}</Text>
-//   ))
-// }
 
 
-//Calling cart from redux using useSelector ----------------------
+//Calling cart from redux using useSelector & Calculations ---------------
 const addedCartItems = useSelector(state => state.products.cart)
 
-//Render function for cart item flatlist -------------------------
+let subtotal =0
+addedCartItems.forEach((item)=>{
+  subtotal += (item["price"]* (itemQuantity==0? item.quantity : itemQuantity))
+})
+
+let discount = discountPercent* subtotal
+const shipping = 15
+let totalBeforeTax = (subtotal + shipping - discount)
+let tax = subtotal* 0.13
+let total = totalBeforeTax + tax
+
+//Render function for cart item flatlist ----------------------------------
 const cartItem = ({item}) =>(
     <View>
   <View style={{flexDirection:'row', justifyContent:"space-between", alignItems:'center', marginBottom:5}}>
@@ -111,9 +120,10 @@ const cartItem = ({item}) =>(
               <Text style={{marginRight: 10}}>{itemQuantity== 0 ? item.quantity : itemQuantity}</Text>
               <TouchableOpacity
                 onPress={() => {
-                  if(itemQuantity == 0 ) setItemQuantity(item.quantity - 1)
+                  if ((itemQuantity ==0 && item.quantity ==1) || (itemQuantity == 1)) dispatch(removeFromCart(item.id))
+                  else if(itemQuantity == 0 ) setItemQuantity(item.quantity - 1)
                   else setItemQuantity(itemQuantity-1)
-                  // if (itemQuantity > 1 ) setItemQuantity(item.quantity - 1) //Need to add if statement function to delete from cart
+                  // if (itemQuantity > 1 ) setItemQuantity(item.quantity - 1) //Need to add if statement function to delete from
                 }}
               >
                 <View style={styles.quantityButton}>
@@ -148,7 +158,9 @@ const cartItem = ({item}) =>(
 
     <View style={styles.container}>
       <View style ={styles.subContainer}>
+      
 
+      {/*  Clear cart & Alert----------------------------------------------*/}
       <View style={{alignItems:'flex-end'}}>
           <TouchableOpacity onPress={()=>{
             Alert.alert("CONFIRMATION!", `Are you sure you want to clear the cart?`, alertButtons)
@@ -163,7 +175,7 @@ const cartItem = ({item}) =>(
         <View>
           <Text style={styles.txt}>Shopping Cart</Text>
         </View>
-
+        
         {/*  Items added to cart----------------------------------------------*/}
 
         <View>
@@ -175,7 +187,7 @@ const cartItem = ({item}) =>(
         </View>
         
 
-        {/* --------------------------------------------------------------------------------------------------------------------------------- */}
+        {/* PromoCode----------------------------------------------------------- */}
 
         <View style={{flexDirection: 'row', backgroundColor:"#C1666B", margin:10, padding:5, alignItems:'center', justifyContent:'space-between'}}>
           <Text style={{color:'white', fontWeight:'800'}}> Promo Code:</Text> 
@@ -202,39 +214,39 @@ const cartItem = ({item}) =>(
 
         }
         
-
+        {/*  Pricing details -----------------------------------------------------*/}
         <View style={{flexDirection:'row', justifyContent:"space-between", alignItems:'center'}}>
           <Text style={{fontSize:20}}>Subtotal:</Text>
-          <Text style={styles.price}>$0.00</Text>
+          <Text style={styles.price}>${(subtotal).toFixed(2)}</Text>
         </View>
 
         <View style={{flexDirection:'row', justifyContent:"space-between", alignItems:'center'}}>
           <Text style={{fontSize:20}}>Discount:</Text>
-          <Text style={styles.price}>$0.00</Text>
+          <Text style={styles.price}>-${(discount).toFixed(2)}</Text>
         </View>
 
         <View style={{flexDirection:'row', justifyContent:"space-between", alignItems:'center'}}>
           <Text style={{fontSize:20}}>Shipping & Handling:</Text>
-          <Text style={styles.price}>$0.00</Text>
+          <Text style={styles.price}>${(shipping).toFixed(2)}</Text>
         </View>
         <View style={{alignItems:'flex-end'}}>
           <View style={{borderBottomWidth:2, borderBottomColor: 'grey', width:'30%', paddingTop:10, marginBottom:10 }}/>
         </View>
         <View style={{flexDirection:'row', justifyContent:"space-between", alignItems:'center'}}>
           <Text style={{fontSize:20}}>Total Before Tax:</Text>
-          <Text style={styles.price}>$0.00</Text>
+          <Text style={styles.price}>${(totalBeforeTax).toFixed(2)}</Text>
         </View>
         <View style={{flexDirection:'row', justifyContent:"space-between", alignItems:'center'}}>
           <Text style={{fontSize:20}}>Estimated GST/HST:</Text>
-          <Text style={styles.price}>$0.00</Text>
+          <Text style={styles.price}>${(tax).toFixed(2)}</Text>
         </View>
         <View style={{flexDirection:'row', justifyContent:"space-between", alignItems:'center'}}>
           <Text style={{fontSize:28, color:'#9F4146'}}>Order Total:</Text>
-          <Text style={styles.price}>$0.00</Text>
+          <Text style={styles.price}>${(total).toFixed(2)}</Text>
         </View>
 
         <View style={{justifyContentContent:'center'}}>
-        <TouchableOpacity onPress={() =>{navigation.navigate('Home')}}>
+        <TouchableOpacity onPress={() =>setShowModal(!showModal)}>
           
           <View style={[styles.button, {backgroundColor:"#C1666B"}]}>
             <Text style={[{color: "#fff"}]}>Check-Out</Text>
@@ -243,8 +255,44 @@ const cartItem = ({item}) =>(
         </TouchableOpacity>
         </View>
       
+      {/* Modal ---------------------------------------------------------------- */}
+      <Modal
+        animationType="slide"
+        visible={showModal}
+        onRequestClose={()=>{
+            setShowModal(false)
+        }}
+      >
+        <View style={styles.container}>
+        <View style={styles.subContainer}>
+            <TextInput
+              placeholder="Credit Card Number"
+              onChangeText={setCreditCard}
+              value={creditCard}
+            />
+            <TextInput
+              placeholder="CVC ###"
+              onChangeText={setCvc}
+              value={cvc}
+            />
+            <Text style={{color:'red'}}> {error}</Text>
 
+            
+            <Button 
+            title="Pay"
+            onPress={()=>{
+                
+                //Add Animation here as confirmation of successful payment?
+                setError('')
+                if(creditCard == 1234567812345678 & cvc == 111) setShowModal(!showModal)
+                else setError('Your credit card is invalid, please try again')
+            }}
+            
+            />
 
+        </View>
+        </View>
+      </Modal>
 
       </View>
     </View>
@@ -281,9 +329,9 @@ const styles = StyleSheet.create({
     
 
   separator1:{
-    borderBottomWidth:2,
+    borderBottomWidth:0.5,
+    borderBottomColor:'grey',
     width:'100%',
-    opacity:'20%'
   },
 
   separator2:{

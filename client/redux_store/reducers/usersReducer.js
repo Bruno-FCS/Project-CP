@@ -2,18 +2,18 @@ import { LOGIN, LOGOUT, REGISTER_USER } from "../actionTypes";
 
 const initialState = {
   users: [
-    {
-      id: 1,
-      name: "John",
-      email: "john@email.com",
-      password: "123456",
-    },
+    // {
+    //   id: 1,
+    //   name: "John",
+    //   email: "john@email.com",
+    //   password: "123456",
+    // },
   ],
   loggedUser: {
-    // id: 1,
-    // name: "John",
-    // email: "john@email.com",
-    // password: "123456",
+    id: 1,
+    name: "John",
+    email: "john@email.com",
+    password: "123456",
   },
   errorMessage: "Default",
 };

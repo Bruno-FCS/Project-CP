@@ -6,7 +6,9 @@ import {
   EMPTY_CART,
   LOGIN,
   LOGOUT,
-  REGISTER_USER
+  REGISTER_USER,
+  INCREASE_QUANTITY,
+  DECREASE_QUANTITY,
 } from "../actionTypes";
 
 export const saveProducts = (products) => ({
@@ -29,9 +31,9 @@ export const removeFromCart = (productId) => ({
   payload: productId,
 });
 
-export const emptyCart = () =>({
+export const emptyCart = () => ({
   type: EMPTY_CART,
-})
+});
 
 export const login = (userInfo) => ({
   type: LOGIN,
@@ -44,5 +46,15 @@ export const logout = () => ({
 
 export const registerUser = (userInfo) => ({
   type: REGISTER_USER,
-  payload: userInfo
+  payload: userInfo,
+});
+
+export const increaseQuantity = (productId) => ({
+  type: INCREASE_QUANTITY,
+  payload: productId,
+});
+
+export const decreaseQuantity = (productId) => ({
+  type: DECREASE_QUANTITY,
+  payload: productId,
 });

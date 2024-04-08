@@ -104,7 +104,12 @@ const Login = ({ navigation }) => {
           <Text style={[{ marginTop: 5 }]}>
             Haven't registered? Register here!
           </Text>
-          <TouchableOpacity onPress={() => navigation.navigate("Register")}>
+          <TouchableOpacity
+            onPress={() => {
+              setDisplayError(false);
+              navigation.navigate("Register");
+            }}
+          >
             <View style={[styles.button, { backgroundColor: "#9F4146" }]}>
               <Text style={[{ color: "#fff" }]}>Create an account</Text>
             </View>

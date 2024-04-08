@@ -6,6 +6,7 @@ import {
   Image,
   StyleSheet,
   Text,
+  ToastAndroid,
   TouchableOpacity,
   View,
 } from "react-native";
@@ -62,6 +63,12 @@ const Product = ({ navigation, route }) => {
           image: item.image,
           quantity,
         })
+      );
+      ToastAndroid.show(
+        quantity == 1
+          ? `${quantity} item added to the cart!`
+          : `${quantity} items added to the cart!`,
+        ToastAndroid.SHORT
       );
     } else {
       showMessage();
@@ -136,7 +143,11 @@ const Product = ({ navigation, route }) => {
         <View
           style={{ flexDirection: "row", alignItems: "center", marginTop: 5 }}
         >
-          <TouchableOpacity onPress={() => setQuantity(quantity + 1)}>
+          <TouchableOpacity
+            onPress={() => {
+              if (quantity > 1) setQuantity(quantity - 1);
+            }}
+          >
             <View style={{ ...styles.quantityButton, marginRight: 10 }}>
               <Text
                 style={{
@@ -144,7 +155,7 @@ const Product = ({ navigation, route }) => {
                   textAlign: "center",
                 }}
               >
-                +
+                -
               </Text>
             </View>
           </TouchableOpacity>
@@ -155,11 +166,7 @@ const Product = ({ navigation, route }) => {
           >
             {quantity}
           </Text>
-          <TouchableOpacity
-            onPress={() => {
-              if (quantity > 1) setQuantity(quantity - 1);
-            }}
-          >
+          <TouchableOpacity onPress={() => setQuantity(quantity + 1)}>
             <View style={styles.quantityButton}>
               <Text
                 style={{
@@ -167,7 +174,7 @@ const Product = ({ navigation, route }) => {
                   textAlign: "center",
                 }}
               >
-                -
+                +
               </Text>
             </View>
           </TouchableOpacity>

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Button, StyleSheet, Text, TextInput, TouchableOpacity, View, Image, FlatList, Alert, Modal} from "react-native";
+import { Button, StyleSheet, Text, TextInput, TouchableOpacity, View, Image, FlatList, Alert, Modal, ScrollView} from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { emptyCart, removeFromCart,  } from "../redux_store/actions";
 
@@ -19,7 +19,7 @@ const [showModal, setShowModal] = useState (false)
 const dispatch = useDispatch()
 const [creditCard, setCreditCard] = useState('')
 const [cvc, setCvc] = useState('')
-
+const [name, setName] = useState('')
 
 
 
@@ -54,12 +54,6 @@ let alertButtons=[
   },
 ]
 
-// Remove from cart function----------------------------------------------
-const handleDelete= itemID =>{
-  dispatch(removeFromCart)
-}
-
-
 
 //Calling cart from redux using useSelector & Calculations ---------------
 const addedCartItems = useSelector(state => state.products.cart)
@@ -70,7 +64,7 @@ addedCartItems.forEach((item)=>{
 })
 
 let discount = discountPercent* subtotal
-const shipping = 15
+const shipping = (addedCartItems.length > 0 ? 15 : 0)
 let totalBeforeTax = (subtotal + shipping - discount)
 let tax = subtotal* 0.13
 let total = totalBeforeTax + tax
@@ -92,7 +86,7 @@ const cartItem = ({item}) =>(
           {/* Title, Quantity and Quantity Controls */}
           <View style={{alignItems:'center'}}>
 
-            <Text style={{width:'60%', textAlign:'center', fontSize:10}}>{item.title}</Text> 
+            <Text style={{width:'60%', textAlign:'center', fontSize:10}}>{item.title.length > 40 ? (item.title).slice(0, 45) +'...' : item.title}</Text> 
 
             {/* Add to Quantity */}
             <View style={{ flexDirection: "row", alignItems: "center", marginTop: 5 }}>
@@ -123,7 +117,6 @@ const cartItem = ({item}) =>(
                   if ((itemQuantity ==0 && item.quantity ==1) || (itemQuantity == 1)) dispatch(removeFromCart(item.id))
                   else if(itemQuantity == 0 ) setItemQuantity(item.quantity - 1)
                   else setItemQuantity(itemQuantity-1)
-                  // if (itemQuantity > 1 ) setItemQuantity(item.quantity - 1) //Need to add if statement function to delete from
                 }}
               >
                 <View style={styles.quantityButton}>
@@ -155,12 +148,13 @@ const cartItem = ({item}) =>(
 
 
   return (
-
+  
     <View style={styles.container}>
       <View style ={styles.subContainer}>
       
 
       {/*  Clear cart & Alert----------------------------------------------*/}
+      <View style={{flex:.80}}>
       <View style={{alignItems:'flex-end'}}>
           <TouchableOpacity onPress={()=>{
             Alert.alert("CONFIRMATION!", `Are you sure you want to clear the cart?`, alertButtons)
@@ -185,10 +179,13 @@ const cartItem = ({item}) =>(
             renderItem={cartItem}
           />
         </View>
+
+        </View>
         
 
         {/* PromoCode----------------------------------------------------------- */}
-
+        <View style={{flex:1, marginTop:70}}>
+          <ScrollView>
         <View style={{flexDirection: 'row', backgroundColor:"#C1666B", margin:10, padding:5, alignItems:'center', justifyContent:'space-between'}}>
           <Text style={{color:'white', fontWeight:'800'}}> Promo Code:</Text> 
           <TextInput 
@@ -253,7 +250,12 @@ const cartItem = ({item}) =>(
           </View>
 
         </TouchableOpacity>
+
+        {/* TO BE DELETED - EDITING PURPOSES ONLY */}
+        {/* <Button title="shop"  onPress={() => navigation.navigate("Home")}/>
         </View>
+        </ScrollView>
+        </View> */}
       
       {/* Modal ---------------------------------------------------------------- */}
       <Modal
@@ -263,35 +265,80 @@ const cartItem = ({item}) =>(
             setShowModal(false)
         }}
       >
-        <View style={styles.container}>
-        <View style={styles.subContainer}>
+        
+        <View style={{ flex:1,backgroundColor: "#F3E2E3", justifyContent:'center', alignItems:'center'}}>
+          <View style={styles.modalSubContainer } resizeMode="contain">
+            <ScrollView>
+            <Image style={[{ width:200, height:100}]} source={require("../assets/blackWhiteLogo.png")}/>
+
+            <View style={{flexDirection:'row'}}>
+              <Text style={{fontSize:24, fontWeight:'800'}}>Total Due: </Text>
+              <Text style={{fontSize:24}}>${(total).toFixed(2)}</Text>
+            </View>
+            <Text>Enter your credit card information: </Text>
+
             <TextInput
+              style={styles.modalInput}
+              placeholder="Name of Credit Card Holder"
+              keyboardType='name-phone-pad'
+              onChangeText={setName}
+              value={name}
+            />
+
+            <TextInput
+              style={styles.modalInput}
               placeholder="Credit Card Number"
+              keyboardType='number-pad'
               onChangeText={setCreditCard}
               value={creditCard}
             />
             <TextInput
+              style={{...styles.modalInput, width:"40%"}}
               placeholder="CVC ###"
               onChangeText={setCvc}
+              keyboardType='number-pad'
               value={cvc}
             />
             <Text style={{color:'red'}}> {error}</Text>
 
+            <View style={{alignItems:'center'}}>
             
-            <Button 
-            title="Pay"
-            onPress={()=>{
-                
+            <View style={{justifyContentContent:'center'}}>
+              <TouchableOpacity onPress={() =>{
                 //Add Animation here as confirmation of successful payment?
                 setError('')
-                if(creditCard == 1234567812345678 & cvc == 111) setShowModal(!showModal)
+                dispatch(emptyCart())
+                if(creditCard == 1234567812345678 && cvc == 111) setShowModal(!showModal)
                 else setError('Your credit card is invalid, please try again')
-            }}
-            
-            />
+              }}>
+                
+                <View style={[styles.button, {backgroundColor:"#C1666B"}]}>
+                  <Text style={[{color: "#fff"}]}>Pay</Text>
+                </View>
 
+              </TouchableOpacity>
+            </View>
+
+
+            <View style={{justifyContentContent:'center'}}>
+              <TouchableOpacity onPress={() =>{
+                setShowModal(!showModal)
+              }}>
+                
+                <View style={[styles.button, {backgroundColor:"#9F4146"}]}>
+                  <Text style={[{color: "#fff"}]}>Cancel</Text>
+                </View>
+
+              </TouchableOpacity>
+            </View>
+
+            
+            </View>
+
+            </ScrollView>
         </View>
         </View>
+        
       </Modal>
 
       </View>
@@ -388,7 +435,28 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: "center",
     width: 60,
-    elevation: 10
+    elevation: 10,
+  },
+  modalSubContainer:{ 
+    flex:1, 
+    marginVertical: 50, 
+    justifyContent:'flex-start', 
+    backgroundColor: "#fff", 
+    borderColor: "#C1666B", 
+    borderWidth: 2,
+    borderRadius: 10, 
+    padding: 20, 
+    elevation:10, 
+    width:'70%', 
+    height:"60%"},
+
+  modalInput:{
+    borderColor:'#C1666B', 
+    borderWidth:0.75, 
+    borderRadius:10, 
+    paddingHorizontal:10, 
+    marginVertical:10, 
+    fontSize:18
   }
 
 });

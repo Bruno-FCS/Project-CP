@@ -251,11 +251,11 @@ const cartItem = ({item}) =>(
 
         </TouchableOpacity>
 
-        {/* TO BE DELETED - EDITING PURPOSES ONLY */}
-        {/* <Button title="shop"  onPress={() => navigation.navigate("Home")}/>
+        {/* TO BE DELETED - EDITING PURPOSES */}
+        {/* <Button title="shop"  onPress={() => navigation.navigate("Home")}/> */}
         </View>
         </ScrollView>
-        </View> */}
+        </View>
       
       {/* Modal ---------------------------------------------------------------- */}
       <Modal

@@ -2,31 +2,26 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faCartShopping } from "@fortawesome/free-solid-svg-icons";
-import Home from "./screens/Home";
-import Cart from "./screens/Cart";
-import Login from "./screens/Login";
-import Register from "./screens/Register";
-import Product from "./screens/Product";
+import Home from "../screens/Home";
+import Cart from "../screens/Cart";
+import Login from "../screens/Login";
+import Register from "../screens/Register";
+import Product from "../screens/Product";
 import { Image, Text, TouchableOpacity, View } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
-import { logout } from "./redux_store/actions";
+import { logout } from "../redux_store/actions";
 
 const Stack = createNativeStackNavigator();
 
-const Settings = ( {navigation} ) => {
+const Settings = ({ navigation }) => {
   const loggedUser = useSelector((state) => state.users.loggedUser);
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
-  const handleLogOut = () => {
-    dispatch(logout())
-    // navigation.navigate("Login")
-  }
-  
   const LogoTitle = () => {
     return (
       <Image
-        style={[{ height: 50 }, {marginRight: 10}, {marginBottom: 5}]}
-        source={require("./assets/quickShopLogo.png")}
+        style={[{ height: 50 }, { marginRight: 10 }, { marginBottom: 5 }]}
+        source={require("../assets/quickShopLogo.png")}
         resizeMode="contain"
       />
     );
@@ -44,7 +39,7 @@ const Settings = ( {navigation} ) => {
         return (
           <>
             {loggedUser.email && (
-              <View style={[{flexDirection: "row"}]}>
+              <View style={[{ flexDirection: "row" }]}>
                 <TouchableOpacity onPress={() => navigation.navigate("Cart")}>
                   <View
                     style={{
@@ -61,7 +56,12 @@ const Settings = ( {navigation} ) => {
                     />
                   </View>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => navigation.navigate("Login")}>
+                <TouchableOpacity
+                  onPress={() => {
+                    dispatch(logout());
+                    navigation.navigate("Login");
+                  }}
+                >
                   <View
                     style={{
                       backgroundColor: "#9F4146",
@@ -85,11 +85,11 @@ const Settings = ( {navigation} ) => {
                     paddingHorizontal: 10,
                     borderRadius: 5,
                     marginLeft: 10,
-                }}
+                  }}
                 >
                   <Text style={{ color: "#fff" }}>Login</Text>
                 </View>
-             </TouchableOpacity>
+              </TouchableOpacity>
             )}
           </>
         );
@@ -99,7 +99,7 @@ const Settings = ( {navigation} ) => {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator >
+      <Stack.Navigator>
         <Stack.Group screenOptions={headerOptions}>
           <Stack.Screen name="Home" component={Home} />
           <Stack.Screen name="Cart" component={Cart} />

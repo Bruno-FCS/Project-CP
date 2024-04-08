@@ -1,121 +1,132 @@
 import { useState } from "react";
-import { StyleSheet, Text, TextInput, View, Image, TouchableOpacity, Pressable } from "react-native";
-import { MaterialCommunityIcons } from '@expo/vector-icons'
+import {
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+  Image,
+  TouchableOpacity,
+  Pressable,
+  ScrollView,
+} from "react-native";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useDispatch, useSelector } from "react-redux";
-import { login } from "../redux_store/actions"; 
+import { login } from "../redux_store/actions";
 
 const Login = ({ navigation }) => {
   const [icon, setIcon] = useState("eye-off");
   const [passVisibility, setPassVisibility] = useState(true);
 
-  const dispatch = useDispatch()
-  const errorMsg = useSelector((state) => state.users.errorMessage)
+  const dispatch = useDispatch();
+  const errorMsg = useSelector((state) => state.users.errorMessage);
 
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  const [displayError, setDisplayError] = useState(false)
-  
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [displayError, setDisplayError] = useState(false);
+
   const handlePassVisibility = () => {
-    if (icon == "eye-off"){
-        setIcon("eye");
-        setPassVisibility(!passVisibility);
-    }else if (icon == "eye"){
-        setIcon("eye-off");
-        setPassVisibility(!passVisibility);
+    if (icon == "eye-off") {
+      setIcon("eye");
+      setPassVisibility(!passVisibility);
+    } else if (icon == "eye") {
+      setIcon("eye-off");
+      setPassVisibility(!passVisibility);
     }
-  }
+  };
 
   const actionHandler = () => {
-   let user = {email, password}
-   dispatch(login(user))
+    setDisplayError(false);
+    let user = { email, password };
+    dispatch(login(user));
 
-    if (errorMsg != ""){
-        setDisplayError(true)
+    if (errorMsg == "Default") {
+      setDisplayError(false);
+    } else if (errorMsg != "") {
+      setDisplayError(true);
+    } else {
+      setDisplayError(false);
+      navigation.navigate("Home");
     }
-    else {
-      setDisplayError(false)
-      navigation.navigate("Home")
-    }
-  }
+  };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.subContainer}>
+    <ScrollView style={styles.scrollViewBox}>
+      <View style={styles.container}>
+        <View style={styles.subContainer}>
+          <Image
+            style={[{ marginTop: 15 }]}
+            source={require("../assets/blackWhiteLogo.png")}
+          />
 
-        <Image style={[{marginTop: 15}]} source={require("../assets/blackWhiteLogo.png")}/>
+          <Text style={styles.heading}>Log in</Text>
 
-        <Text style={styles.heading}>Sign in</Text>
-
-        <View>
-          <Text style={styles.text}>
-            Enter your email address:
-          </Text>
+          <View>
+            <Text style={styles.text}>Enter your email address:</Text>
             <TextInput
               style={styles.inputFields}
               value={email}
               onChangeText={setEmail}
               textContentType="emailAddress"
+              keyboardType="email-address"
             />
-        </View>
-        <View>
+          </View>
+          <View>
+            <View style={[{ flexDirection: "row" }, styles.text]}>
+              <Text>Enter your password:</Text>
 
-          <View style={[{flexDirection: "row"}, styles.text]}>
-            <Text>
-              Enter your password:
-            </Text>
+              <Pressable
+                onPress={handlePassVisibility}
+                style={[{ alignSelf: "center" }]}
+              >
+                <MaterialCommunityIcons name={icon} size={22} color="#9F4146" />
+              </Pressable>
+            </View>
 
-            <Pressable onPress={handlePassVisibility} style={[{alignSelf: "center"}]}>
-                <MaterialCommunityIcons name={icon} size={22} color="#9F4146"/>
-            </Pressable>
-        </View>
-
-          <TextInput
-            style={styles.inputFields}
-            value={password}
-            onChangeText={setPassword}
-            secureTextEntry={passVisibility}
-            autoComplete="off"
-            textContentType="password"
-            autoCapitalize="none"
-          />
-          
-        </View>
-
-        {displayError && <Text style={styles.error}>{errorMsg}</Text>}
-
-        <TouchableOpacity onPress={actionHandler}>
-          
-          <View style={[styles.button, {backgroundColor:"#C1666B"}]}>
-            <Text style={[{color: "#fff"}]}>Sign in</Text>
+            <TextInput
+              style={styles.inputFields}
+              value={password}
+              onChangeText={setPassword}
+              secureTextEntry={passVisibility}
+              autoComplete="off"
+              textContentType="password"
+              autoCapitalize="none"
+            />
           </View>
 
-        </TouchableOpacity>
-          
+          {displayError && <Text style={styles.error}>{errorMsg}</Text>}
 
-        <Text style={[{marginTop: 5}]}>
-          Haven't registered? Register here!
-        </Text>
-        <TouchableOpacity onPress={() => navigation.navigate("Register")}>
-          
-          <View style={[styles.button, { backgroundColor: "#9F4146"}]}>
-            <Text style={[{color: "#fff"}]}>Create an account</Text>
-          </View>
+          <TouchableOpacity onPress={actionHandler}>
+            <View style={[styles.button, { backgroundColor: "#C1666B" }]}>
+              <Text style={[{ color: "#fff" }]}>Log in</Text>
+            </View>
+          </TouchableOpacity>
 
-        </TouchableOpacity>
-          <Text>{email}, {password}</Text>
+          <Text style={[{ marginTop: 5 }]}>
+            Haven't registered? Register here!
+          </Text>
+          <TouchableOpacity onPress={() => navigation.navigate("Register")}>
+            <View style={[styles.button, { backgroundColor: "#9F4146" }]}>
+              <Text style={[{ color: "#fff" }]}>Create an account</Text>
+            </View>
+          </TouchableOpacity>
+        </View>
       </View>
-    </View>
+    </ScrollView>
   );
 };
 
 export default Login;
 
 const styles = StyleSheet.create({
+  scrollViewBox: {
+    backgroundColor: "#F3E2E3",
+  },
   container: {
     flex: 1,
     backgroundColor: "#F3E2E3",
     alignItems: "center",
     justifyContent: "center",
+    
   },
   subContainer: {
     flex: 1,
@@ -130,7 +141,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     width: 384,
   },
-  
+
   inputFields: {
     width: 250,
     height: 34,
@@ -148,9 +159,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     width: 200,
   },
-  text: { 
-    marginTop: 10, 
-    marginBottom: 5 
+  text: {
+    marginTop: 10,
+    marginBottom: 5,
   },
   heading: {
     fontSize: 30,
@@ -161,6 +172,6 @@ const styles = StyleSheet.create({
     color: "red",
     marginTop: 5,
     marginBottom: 5,
-    fontWeight: "bold"
-  }
+    fontWeight: "bold",
+  },
 });

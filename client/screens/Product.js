@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { insertIntoCart } from "../redux_store/actions";
 
@@ -8,16 +8,20 @@ const Product = ({ navigation, route }) => {
   const [quantity, setQuantity] = useState(1);
   const dispatch = useDispatch();
 
+  const loggedUser = useSelector((state) => state.users.loggedUser);
+
   const handleAddToCart = () => {
-    dispatch(
-      insertIntoCart({
-        id: item.id,
-        title: item.title,
-        price: item.price,
-        image: item.image,
-        quantity,
-      })
-    );
+    if (loggedUser.email) {
+      dispatch(
+        insertIntoCart({
+          id: item.id,
+          title: item.title,
+          price: item.price,
+          image: item.image,
+          quantity,
+        })
+      );
+    }
   };
 
   return (

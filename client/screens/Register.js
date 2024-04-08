@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Button, StyleSheet, Text, TextInput, View, TouchableOpacity, Pressable, Image } from "react-native";
+import { Button, StyleSheet, Text, TextInput, View, TouchableOpacity, Pressable, Image, ScrollView } from "react-native";
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import { UseDispatch, useDispatch, useSelector } from "react-redux";
 import { registerUser } from "../redux_store/actions";
@@ -10,6 +10,7 @@ const Register = ({ navigation }) => {
   const [password, setPassword] = useState("")
   const [confirmPass, setConfirmPass] = useState("")
   const [icon, setIcon] = useState("eye-off");
+  const [icon2, setIcon2] = useState("eye-off");
   const [passVisibility, setPassVisibility] = useState(true);
   const [showConfirmPass, setShowConfirmPass] = useState(true)
 
@@ -30,27 +31,27 @@ const Register = ({ navigation }) => {
     }
   }
   const handleConfirmPass = () => {
-    if (icon == "eye-off"){
-      setIcon("eye");
+    if (icon2 == "eye-off"){
+      setIcon2("eye");
       setShowConfirmPass(!showConfirmPass);
-  }else if (icon == "eye"){
-      setIcon("eye-off");
+  }else if (icon2 == "eye"){
+      setIcon2("eye-off");
       setShowConfirmPass(!showConfirmPass);
   }
   }
 
   const registerHandler = () => {
     if(name == "" || email == "" || password == "" || confirmPass == "" ){
-      setEmptyField(!emptyField)
+      setEmptyField(true)
     }
     else if (password != confirmPass){
       setEmptyField(false)
       setPassError(true)
     }
     else {
-      setEmptyField(true)
+      setEmptyField(false)
       setPassError(false)
-      
+
       let user = {name, email, password}
      console.log( dispatch(registerUser(user)))
 
@@ -69,99 +70,104 @@ const Register = ({ navigation }) => {
     
   }
   return (
-    <View style={styles.container}>
-      <View style={styles.subContainer}>
+    <ScrollView style={styles.scrollViewBox}>
+      <View style={styles.container}>
+        <View style={styles.subContainer}>
 
-        <Image style={[{marginTop: 15}]} source={require("../assets/blackWhiteLogo.png")}/>
+          <Image style={[{marginTop: 15}]} source={require("../assets/blackWhiteLogo.png")}/>
 
-        <Text style={styles.heading}>Register</Text>
+          <Text style={styles.heading}>Register</Text>
 
-        <View style={styles.grouping}>
-          <Text style={styles.text}>
-            Your name:
-          </Text>
+          <View style={styles.grouping}>
+            <Text style={styles.text}>
+              Your name:
+            </Text>
+              <TextInput
+                style={styles.inputFields}
+                value={name}
+                onChangeText={setName}
+                textContentType="name"
+              />
+          </View>
+          <View style={styles.grouping}>
+            <Text>
+              Your email address:
+            </Text>
             <TextInput
               style={styles.inputFields}
-              value={name}
-              onChangeText={setName}
-              textContentType="name"
+              keyboardType="email-address"
+              value={email}
+              onChangeText={setEmail(email.toLowerCase())}
+              textContentType="emailAddress"
             />
-        </View>
-        <View style={styles.grouping}>
-          <Text>
-            Your email address:
-          </Text>
-          <TextInput
-            style={styles.inputFields}
-            keyboardType="email-address"
-            value={email}
-            onChangeText={setEmail}
-            textContentType="emailAddress"
-          />
-        </View>
+          </View>
 
-        <View style={styles.grouping}>
+          <View style={styles.grouping}>
+            <View style={[{flexDirection: "row"}]}>
+
+              <Text>
+                Your password:
+              </Text>
+              <Pressable onPress={handlePassVisibility}>
+                <MaterialCommunityIcons name={icon} size={22} color="#9F4146"/>
+              </Pressable>
+
+            </View>
+              <TextInput
+                style={styles.inputFields}
+                value={password}
+                onChangeText={setPassword}
+                secureTextEntry={passVisibility}
+                autoComplete="off"
+                textContentType="password"
+                autoCapitalize="none"
+              />
+            
+          </View>
+
+          <View style={styles.grouping}>
           <View style={[{flexDirection: "row"}]}>
 
             <Text>
-              Your password:
+              Confirm password:
             </Text>
-            <Pressable onPress={handlePassVisibility}>
-              <MaterialCommunityIcons name={icon} size={22} color="#9F4146"/>
+            <Pressable onPress={handleConfirmPass}>
+              <MaterialCommunityIcons name={icon2} size={22} color="#9F4146"/>
             </Pressable>
 
-          </View>
+            </View>
             <TextInput
               style={styles.inputFields}
-              value={password}
-              onChangeText={setPassword}
-              secureTextEntry={passVisibility}
               autoComplete="off"
+              onChangeText={setConfirmPass}
+              secureTextEntry={showConfirmPass}
               textContentType="password"
               autoCapitalize="none"
             />
-          
-        </View>
-
-        <View style={styles.grouping}>
-        <View style={[{flexDirection: "row"}]}>
-
-          <Text>
-            Confirm password:
-          </Text>
-          <Pressable onPress={handleConfirmPass}>
-            <MaterialCommunityIcons name={icon} size={22} color="#9F4146"/>
-          </Pressable>
-
           </View>
-          <TextInput
-            style={styles.inputFields}
-            autoComplete="off"
-            onChangeText={setConfirmPass}
-            secureTextEntry={showConfirmPass}
-            textContentType="password"
-            autoCapitalize="none"
-          />
+          {passError && <Text style={styles.error}> Passwords do not match!</Text>}
+          {emptyField && <Text style={styles.error}> All fields must be filled!</Text>}
+
+          <TouchableOpacity onPress={registerHandler}>
+            
+            <View style={[styles.button, { backgroundColor: "#9F4146"}]}>
+              <Text style={[{color: "#fff",}]}>Complete registration</Text>
+            </View>
+
+          </TouchableOpacity>
         </View>
-        {passError && <Text style={styles.error}> Passwords do not match!</Text>}
-        {emptyField && <Text style={styles.error}> All fields must be filled!</Text>}
-
-        <TouchableOpacity onPress={registerHandler}>
-          
-          <View style={[styles.button, { backgroundColor: "#9F4146"}]}>
-            <Text style={[{color: "#fff",}]}>Complete registration</Text>
-          </View>
-
-        </TouchableOpacity>
+        
       </View>
-      
-    </View>
+    </ScrollView>
   );
 };
 
 export default Register;
 
 const styles = StyleSheet.create({
+  scrollViewBox: {
+    backgroundColor: "#F3E2E3",
+  },
   container: {
     flex: 1,
     backgroundColor: "#F3E2E3",

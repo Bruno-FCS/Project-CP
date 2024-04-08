@@ -82,16 +82,17 @@ const Product = ({ navigation, route }) => {
           width: 350,
           height: 200,
           paddingHorizontal: 25,
-          backgroundColor: "#333",
-          borderColor: "#000",
-          borderWidth: 1,
+          backgroundColor: "#fff",
+          borderColor: "#C1666B",
+          borderWidth: 2,
+          borderRadius: 10,
           borderRadius: 5,
           zIndex: 2,
-          justifyContent: "center",
+          justifyContent: "space-evenly",
           alignContent: "center",
         }}
       >
-        <Text style={{ fontSize: 18, color: "yellow", textAlign: "center" }}>
+        <Text style={{ fontSize: 18, color: "black", textAlign: "center" }}>
           Sorry, you need to be logged to add products to cart.
         </Text>
         <View style={{ flexDirection: "row", justifyContent: "space-around" }}>
@@ -140,7 +141,6 @@ const Product = ({ navigation, route }) => {
               <Text
                 style={{
                   color: "#fff",
-                  fontWeight: "bold",
                   textAlign: "center",
                 }}
               >
@@ -164,7 +164,6 @@ const Product = ({ navigation, route }) => {
               <Text
                 style={{
                   color: "#fff",
-                  fontWeight: "bold",
                   textAlign: "center",
                 }}
               >
@@ -175,9 +174,7 @@ const Product = ({ navigation, route }) => {
         </View>
         <TouchableOpacity onPress={handleAddToCart}>
           <View style={styles.button}>
-            <Text style={{ color: "#fff", fontWeight: "bold" }}>
-              Add to Cart
-            </Text>
+            <Text style={{ color: "#fff" }}>Add to Cart</Text>
           </View>
         </TouchableOpacity>
         <Text style={styles.text}>{item.description}</Text>
@@ -222,4 +219,5 @@ const styles = StyleSheet.create({
     marginTop: 5,
     backgroundColor: "#C1666B",
   },
+  buttonText: { color: "white" },
 });

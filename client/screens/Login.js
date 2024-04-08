@@ -126,7 +126,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#F3E2E3",
     alignItems: "center",
     justifyContent: "center",
-    
   },
   subContainer: {
     flex: 1,
@@ -140,6 +139,7 @@ const styles = StyleSheet.create({
     paddingRight: 20,
     borderRadius: 10,
     width: 384,
+    paddingBottom: 20,
   },
 
   inputFields: {

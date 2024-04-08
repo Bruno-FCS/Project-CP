@@ -25,35 +25,32 @@ const usersReducer = (state = initialState, action) => {
         (user) => user.email == action.payload.email.toLowerCase()
       );
 
-      if (action.payload.email == "" || action.payload.password == ""){
+      if (action.payload.email == "" || action.payload.password == "") {
         return { ...state, errorMessage: "All fields must be filled!" };
-      }
-
-      else if (existingUser) {
+      } else if (existingUser) {
         if (existingUser.password == action.payload.password) {
           return { ...state, loggedUser: existingUser, errorMessage: "" };
-        } 
-        else {
+        } else {
           return { ...state, errorMessage: "Invalid password provided!" };
         }
-      } 
-      else {
+      } else {
         return { ...state, errorMessage: "Invalid email provided!" };
       }
     }
     case LOGOUT: {
-      return { ...state, loggedUser: {} };
+      return { ...state, loggedUser: {}, errorMessage: "Default" };
     }
 
     case REGISTER_USER: {
       let newUser = action.payload;
       let userCheck = state.users.find((user) => user.email == newUser.email);
-      
+
       if (!userCheck) {
         console.log("user not found");
         return {
           ...state,
           users: [
+            ...state.users,
             {
               id: Math.floor(Math.random * 4000), //generate a random 4 digit number as ID
               name: newUser.name,
@@ -61,13 +58,13 @@ const usersReducer = (state = initialState, action) => {
               password: newUser.password,
             },
           ],
+          errorMessage: "",
         };
-      } 
-      else {
+      } else {
         console.log("user found");
         return {
           ...state,
-          errorMessage: "Email/Passowrd has already been used!",
+          errorMessage: "Email/Password has already been used!",
         };
       }
     }

@@ -1,14 +1,56 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  Animated,
+  Easing,
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { insertIntoCart } from "../redux_store/actions";
 
 const Product = ({ navigation, route }) => {
   const { item } = route.params;
   const [quantity, setQuantity] = useState(1);
+  const [displayNone, setDisplayNone] = useState(true);
+
+  const vector = useRef(new Animated.Value(800)).current;
+  const opacity = useRef(new Animated.Value(0)).current;
+
   const dispatch = useDispatch();
 
   const loggedUser = useSelector((state) => state.users.loggedUser);
+
+  const showMessage = () => {
+    setDisplayNone(false);
+    Animated.timing(vector, {
+      easing: Easing.ease,
+      toValue: 200,
+      duration: 500,
+      useNativeDriver: false,
+    }).start();
+    Animated.timing(opacity, {
+      toValue: 1,
+      duration: 500,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  const dismissMessage = () => {
+    Animated.timing(vector, {
+      toValue: 800,
+      duration: 500,
+      useNativeDriver: false,
+    }).start();
+    Animated.timing(opacity, {
+      toValue: 0,
+      duration: 500,
+      useNativeDriver: true,
+    }).start();
+    setTimeout(() => setDisplayNone(true), 500);
+  };
 
   const handleAddToCart = () => {
     if (loggedUser.email) {
@@ -21,11 +63,59 @@ const Product = ({ navigation, route }) => {
           quantity,
         })
       );
+    } else {
+      showMessage();
     }
+  };
+
+  const goToLogin = () => {
+    dismissMessage();
+    navigation.navigate("Login");
   };
 
   return (
     <View style={styles.container}>
+      <Animated.View
+        style={{
+          position: "absolute",
+          top: vector,
+          width: 350,
+          height: 200,
+          paddingHorizontal: 25,
+          backgroundColor: "#333",
+          borderColor: "#000",
+          borderWidth: 1,
+          borderRadius: 5,
+          zIndex: 2,
+          justifyContent: "center",
+          alignContent: "center",
+        }}
+      >
+        <Text style={{ fontSize: 18, color: "yellow", textAlign: "center" }}>
+          Sorry, you need to be logged to add products to cart.
+        </Text>
+        <View style={{ flexDirection: "row", justifyContent: "space-around" }}>
+          <TouchableOpacity style={styles.button} onPress={dismissMessage}>
+            <Text style={styles.buttonText}>Cancel</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.button} onPress={goToLogin}>
+            <Text style={styles.buttonText}>Login</Text>
+          </TouchableOpacity>
+        </View>
+      </Animated.View>
+      <Animated.View
+        style={{
+          display: displayNone ? "none" : "flex",
+          position: "absolute",
+          height: "100%",
+          width: "100%",
+          backgroundColor: opacity.interpolate({
+            inputRange: [0, 1],
+            outputRange: ["rgba(0, 0, 0, 0)", "rgba(0, 0, 0, 0.5)"],
+          }),
+          zIndex: 1,
+        }}
+      ></Animated.View>
       <View style={styles.subContainer}>
         <View style={{ alignItems: "center" }}>
           <Image

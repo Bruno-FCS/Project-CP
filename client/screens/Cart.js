@@ -19,8 +19,8 @@ import {
   removeFromCart,
 } from "../redux_store/actions";
 
-const Cart = ({ route, navigation }) => {
-  //Calculation & Alert Functions ------------------------------------------------------------
+const Cart = ({ navigation }) => {
+  //Constance/UseState Variables & Functions -------------------------------------------------
 
   const [inputPC, setInputPC] = useState("");
   const promoCode = "SHOP2024";
@@ -34,7 +34,6 @@ const Cart = ({ route, navigation }) => {
   const [cvc, setCvc] = useState("");
   const [name, setName] = useState("");
 
-  // const quantity = useSelector((state) => state.products.cart)
 
   //Promocode function --------------------------------
   const applyDiscount = () => {
@@ -161,6 +160,7 @@ const Cart = ({ route, navigation }) => {
     </View>
   );
 
+  // RETURNED INTERFACE --------------------------------------------------------------------------------------------------------------------
   return (
     <View style={styles.container}>
       <View style={styles.subContainer}>
@@ -174,7 +174,7 @@ const Cart = ({ route, navigation }) => {
                 <TouchableOpacity
                   onPress={() => {
                     Alert.alert(
-                      "CONFIRMATION!",
+                      "CONFIRMATION",
                       `Are you sure you want to clear the cart?`,
                       alertButtons
                     );
@@ -212,6 +212,7 @@ const Cart = ({ route, navigation }) => {
             {/* PromoCode----------------------------------------------------------- */}
             <View style={{ flex: 1, marginTop: 70 }}>
               <ScrollView>
+
                 <View
                   style={{
                     flexDirection: "row",
@@ -344,10 +345,8 @@ const Cart = ({ route, navigation }) => {
                       <Text style={[{ color: "#fff" }]}>Check-Out</Text>
                     </View>
                   </TouchableOpacity>
-
-                  {/* TO BE DELETED - EDITING PURPOSES */}
-                  {/* <Button title="shop"  onPress={() => navigation.navigate("Home")}/> */}
                 </View>
+
               </ScrollView>
             </View>
 
@@ -410,11 +409,19 @@ const Cart = ({ route, navigation }) => {
                       <View style={{ justifyContentContent: "center" }}>
                         <TouchableOpacity
                           onPress={() => {
-                            //Add Animation here as confirmation of successful payment?
                             setError("");
                             dispatch(emptyCart());
-                            if (creditCard == 1234567812345678 && cvc == 111)
-                              setShowModal(!showModal);
+                            if (creditCard == 1234567812345678 && cvc == 111){
+                              setShowModal(!showModal)
+                              setError("")
+                              navigation.navigate("Home")
+                              Alert.alert(
+                                "CONFIRMATION",
+                                `Payment successful!`
+                              );
+                            }
+
+                                
                             else
                               setError(
                                 "Your credit card is invalid, please try again"

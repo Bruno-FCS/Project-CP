@@ -20,7 +20,6 @@ import {
   removeFromCart,
 } from "../redux_store/actions";
 
-
 const Cart = ({ navigation }) => {
   //Constance/UseState Variables & Functions -------------------------------------------------
 
@@ -33,9 +32,8 @@ const Cart = ({ navigation }) => {
   const [showModal, setShowModal] = useState(false);
   const dispatch = useDispatch();
   const [creditCard, setCreditCard] = useState("");
-  const [cvc, setCvc] = useState("");
+  const [cvv, setCvv] = useState("");
   const [name, setName] = useState("");
-
 
   //Promocode function --------------------------------
   const applyDiscount = () => {
@@ -152,17 +150,34 @@ const Cart = ({ navigation }) => {
           </View>
         </View>
 
-        <View style={{justifyContent:"space-between", alignItems:'flex-end', height:80}}>
-            <View style={{justifyContent:"flex-end", flexDirection:'row'}}>
-              <TouchableHighlight
-                underlayColor="#9F4146"
-                onPress={()=>{dispatch(removeFromCart(item.id))}}
-              >
-                <View style={{ margin:5 }}>
-                  <Text style={{fontSize:26, fontWeight:'800', color:'grey', paddingLeft:10 }}>x</Text>
-                </View>
-              </TouchableHighlight>
-            </View>
+        <View
+          style={{
+            justifyContent: "space-between",
+            alignItems: "flex-end",
+            height: 80,
+          }}
+        >
+          <View style={{ justifyContent: "flex-end", flexDirection: "row" }}>
+            <TouchableHighlight
+              underlayColor="#9F4146"
+              onPress={() => {
+                dispatch(removeFromCart(item.id));
+              }}
+            >
+              <View style={{ margin: 5 }}>
+                <Text
+                  style={{
+                    fontSize: 26,
+                    fontWeight: "800",
+                    color: "grey",
+                    paddingLeft: 10,
+                  }}
+                >
+                  x
+                </Text>
+              </View>
+            </TouchableHighlight>
+          </View>
           <Text style={styles.price}>
             ${(item.price * item.quantity).toFixed(2)}
           </Text>
@@ -177,7 +192,11 @@ const Cart = ({ navigation }) => {
     <View style={styles.container}>
       <View style={styles.subContainer}>
         {addedCartItems.length == 0 ? (
-          <Text style={{ textAlign: "center", fontSize:22, fontWeight:'800' }}>Nothing in Cart... </Text>
+          <Text
+            style={{ textAlign: "center", fontSize: 22, fontWeight: "800" }}
+          >
+            Nothing in Cart...{" "}
+          </Text>
         ) : (
           <>
             {/*  Clear cart & Alert----------------------------------------------*/}
@@ -224,7 +243,6 @@ const Cart = ({ navigation }) => {
             {/* PromoCode----------------------------------------------------------- */}
             <View style={{ flex: 1, marginTop: 70 }}>
               <ScrollView>
-
                 <View
                   style={{
                     flexDirection: "row",
@@ -349,6 +367,7 @@ const Cart = ({ navigation }) => {
                       setShowModal(!showModal);
                       setConfirmationMessage("");
                       setInputPC("");
+                      setError("");
                     }}
                   >
                     <View
@@ -358,7 +377,6 @@ const Cart = ({ navigation }) => {
                     </View>
                   </TouchableOpacity>
                 </View>
-
               </ScrollView>
             </View>
 
@@ -410,10 +428,10 @@ const Cart = ({ navigation }) => {
                     />
                     <TextInput
                       style={{ ...styles.modalInput, width: "40%" }}
-                      placeholder="CVC ###"
-                      onChangeText={setCvc}
+                      placeholder="CVV ###"
+                      onChangeText={setCvv}
                       keyboardType="number-pad"
-                      value={cvc}
+                      value={cvv}
                     />
                     <Text style={{ color: "red" }}> {error}</Text>
 
@@ -422,21 +440,21 @@ const Cart = ({ navigation }) => {
                         <TouchableOpacity
                           onPress={() => {
                             setError("");
-                            dispatch(emptyCart());
-                            if (creditCard == 1234567812345678 && cvc == 111){
-                              setShowModal(!showModal)
-                              setError("")
-                              navigation.navigate("Home")
+                            if (
+                              name.length > 0 &&
+                              creditCard == 1234567812345678 &&
+                              cvv == 111
+                            ) {
+                              setShowModal(!showModal);
+                              dispatch(emptyCart());
                               Alert.alert(
                                 "CONFIRMATION",
                                 `Payment successful!`
                               );
-                            }
-
-                                
-                            else
+                              navigation.navigate("Home");
+                            } else
                               setError(
-                                "Your credit card is invalid, please try again"
+                                "Your credit card details are invalid, please try again"
                               );
                           }}
                         >
@@ -455,6 +473,7 @@ const Cart = ({ navigation }) => {
                         <TouchableOpacity
                           onPress={() => {
                             setShowModal(!showModal);
+                            setError("");
                           }}
                         >
                           <View

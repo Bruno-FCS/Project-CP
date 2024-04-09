@@ -7,9 +7,10 @@ import Cart from "../screens/Cart";
 import Login from "../screens/Login";
 import Register from "../screens/Register";
 import Product from "../screens/Product";
-import { Image, Text, TouchableOpacity, View } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../redux_store/actions";
+import LogoTitle from "./LogoTitle";
 
 const Stack = createNativeStackNavigator();
 
@@ -17,21 +18,11 @@ const Settings = ({ navigation }) => {
   const loggedUser = useSelector((state) => state.users.loggedUser);
   const dispatch = useDispatch();
 
-  const LogoTitle = () => {
-    return (
-      <Image
-        style={[{ height: 50 }, { marginRight: 10 }, { marginBottom: 5 }]}
-        source={require("../assets/quickShopLogo.png")}
-        resizeMode="contain"
-      />
-    );
-  };
-
   const headerOptions = ({ navigation, route }) => ({
     headerStyle: { backgroundColor: "#C1666B" },
     headerTintColor: "white",
     headerTitleAlign: "center",
-    headerTitle: () => <LogoTitle />,
+    headerTitle: () => <LogoTitle navigation={navigation} />,
     headerRight: () => {
       if (route.name == "Login" || route.name == "Register") {
         return;

@@ -10,6 +10,7 @@ import {
   Alert,
   Modal,
   ScrollView,
+  TouchableHighlight,
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -18,6 +19,7 @@ import {
   increaseQuantity,
   removeFromCart,
 } from "../redux_store/actions";
+
 
 const Cart = ({ navigation }) => {
   //Constance/UseState Variables & Functions -------------------------------------------------
@@ -150,7 +152,17 @@ const Cart = ({ navigation }) => {
           </View>
         </View>
 
-        <View>
+        <View style={{justifyContent:"space-between", alignItems:'flex-end', height:80}}>
+            <View style={{justifyContent:"flex-end", flexDirection:'row'}}>
+              <TouchableHighlight
+                underlayColor="#9F4146"
+                onPress={()=>{dispatch(removeFromCart(item.id))}}
+              >
+                <View style={{ margin:5 }}>
+                  <Text style={{fontSize:26, fontWeight:'800', color:'grey', paddingLeft:10 }}>x</Text>
+                </View>
+              </TouchableHighlight>
+            </View>
           <Text style={styles.price}>
             ${(item.price * item.quantity).toFixed(2)}
           </Text>

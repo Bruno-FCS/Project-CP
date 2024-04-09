@@ -100,7 +100,7 @@ const Product = ({ navigation, route }) => {
         }}
       >
         <Text style={{ fontSize: 18, color: "black", textAlign: "center" }}>
-          Sorry, you need to be logged to add products to cart.
+          Sorry, you must be logged in to add products to cart.
         </Text>
         <View style={{ flexDirection: "row", justifyContent: "space-around" }}>
           <TouchableOpacity style={styles.button} onPress={dismissMessage}>
